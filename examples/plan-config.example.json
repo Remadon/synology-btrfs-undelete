@@ -1,0 +1,12 @@
+{
+  "_comment": "Top-level folder names of the deleted share. skip_top: leave out (e.g. things you have copies of elsewhere). Tiers are restored in order; everything not listed goes into default_tier. Set default_uid/gid to your NAS user ids (ls -ln on the NAS).",
+  "skip_top": ["Old Downloads", "_lost+found", "@eaDir"],
+  "default_tier": "1-documents-and-small-stuff",
+  "default_uid": 1026,
+  "default_gid": 100,
+  "tiers": [
+    {"name": "2-photos-and-video", "tops": ["Photos", "Video"]},
+    {"name": "3-audiobooks", "tops": ["Audiobooks"]},
+    {"name": "4-big-and-replaceable", "tops": ["Games", "ISOs"]}
+  ]
+}

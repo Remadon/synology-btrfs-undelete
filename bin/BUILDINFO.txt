@@ -1,0 +1,8 @@
+extent-restore static build
+built:   2026-10-24T22:27Z
+command: gcc -O2 -Wall -Wextra -static -pthread -o extent-restore-x86_64-linux-static src/extent-restore.c
+compiler: gcc (SUSE Linux) 16.2.1 20260929
+glibc:    ldd (GNU libc) 2.44
+source sha256: 49f76c1aefb6660cf29050192c964d151d0414fd764df9e410e2c47ba51d7b54
+binary sha256: a7b628417ccaa2fd8295fc6eb6304566c5b31119badcd846f1a4da9348546c4e
+Verify on your side: build from source and compare behavior (the exact bytes can differ with a different toolchain).
