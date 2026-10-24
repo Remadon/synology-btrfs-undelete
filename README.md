@@ -3,10 +3,10 @@
 Get files back from a **deleted BTRFS subvolume (for example a Synology shared folder)** by using the metadata that BTRFS
 leaves behind, when you have no snapshot or backup.
 
-This toolkit comes from a real incident: an uninstall script on a Synology DS1821+ erased a 3 TB share (about 76,000 files) and
-reported success. All of those files were recovered with the tools and process in this repository. The case study is in
-[`docs/CASE-STUDY.md`](docs/CASE-STUDY.md); the upstream bug that caused it is described in
-[`docs/THE-BUG.md`](docs/THE-BUG.md).
+This toolkit comes from a real incident: an uninstall script on a Synology DS1821+ erased a multi-terabyte share and reported
+success. This repository holds the tools and the process used to rebuild that share's file tree from leftover metadata and restore
+about 76,000 files (3 TB) from it. The numbers, and the status of the owner's validation of the result, are in
+[`docs/CASE-STUDY.md`](docs/CASE-STUDY.md); the upstream bug that caused it is described in [`docs/THE-BUG.md`](docs/THE-BUG.md).
 
 > ### Read this first
 > * **Time matters.** The file *data* usually survives for a long time, but the *metadata* (names, folders, where each file's data
@@ -14,7 +14,7 @@ reported success. All of those files were recovered with the tools and process i
 >   recreate the share**, and copy the metadata off the volume first ([`docs/FIRST-HOUR.md`](docs/FIRST-HOUR.md)).
 > * Nothing here ever writes to the damaged volume. Even so, **read the code before you run anything as root** on a machine that
 >   holds data you care about. It is short on purpose.
-> * This is forensic tooling that worked for one incident, not a product. No warranty. See [Limits](#limits).
+> * This is forensic tooling built for and tested on one incident, not a product. No warranty. See [Limits](#limits).
 
 ## What you need
 

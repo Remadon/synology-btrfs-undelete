@@ -48,4 +48,5 @@
   PDF parsing. 46 passed. The 47th, a video clip, was truncated in the original (`File ended prematurely`).
 * Independent check: a container's own database listed every audio file it had ever indexed; all 1,821 were in the plan.
 
-Final validation results: see the blog post / repository description.
+**Status:** the restore was still running when this was first published (about 20% done, no read errors so far). The owner's validation
+results will be added here when they are in.
