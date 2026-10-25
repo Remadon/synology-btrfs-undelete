@@ -17,7 +17,8 @@
 | t + 1 h 45 | owner notices: share listed in Control Panel, gone from File Station; NFS and a container fail |
 | t + 2 h 45 | metadata copy (3.1 GB) safely on another volume |
 | t + 4 h | full restore starts (after a successful 47-file canary) |
-| t + ~6.5 h | restore of 3.0 TiB expected to finish |
+| t + 7 h 16 min | restore finished: 76,338 files, 0 failed, 0 read errors |
+| t + ~8 h | owner's spot checks of files in every top-level folder (read-only NFS mount): all intact |
 
 ## What the metadata copy contained
 
@@ -42,11 +43,34 @@
 
 ## Restore
 
-* Plan: 76,338 files, 4,924 directories, 100,251 extent/inline records, 3.02 TiB to read, in four tiers.
-* Speed: 300 to 390 MiB/s read from the RAID 5 array, written to a second volume.
+* Plan: 76,338 files, 4,924 directories, 100,251 extent/inline records, in four tiers. The files add up to 3.06 TiB; 3.02 TiB
+  (3,095.6 GiB) had to be read, because 75 of the files contain holes that were already unwritten in the originals (34 GiB in total).
+* Speed: typically 240 to 390 MiB/s read from the RAID 5 array and written to a second volume; 271 MiB/s on average
+  (195 minutes in all), slowest on the last tier of many small files.
 * Canary: 47 files (3.9 GB) from both "current" and "removed" chunks: ZIP member CRCs, 7z tests, full image decodes, ffmpeg decodes,
   PDF parsing. 46 passed. The 47th, a video clip, was truncated in the original (`File ended prematurely`).
-* Independent check: a container's own database listed every audio file it had ever indexed; all 1,821 were in the plan.
+* Independent check: a container's own database listed 1,821 library files (audio and ebooks); all of them were in the plan.
 
-**Status:** the restore was still running when this was first published (about 20% done, no read errors so far). The owner's validation
-results will be added here when they are in.
+## Result
+
+* The restore finished in 195 minutes: **76,338 of 76,338 files, 0 failed, 0 read errors.** A listing taken as root afterwards
+  matched the plan exactly (every file present at its planned size, 3,360,536,180,733 bytes in all, no `.restore-partial` leftovers).
+* The owner opened files from every top-level folder over a read-only NFS mount and found them intact.
+* Our own content checks, on finished files while the restore was still running: a sample of 127 files (ZIP member CRCs, `7z t`,
+  image decodes, `ffmpeg` decodes, PDF parsing) gave 124 passes. Of the other three, one was a false alarm in the checker and two
+  were incomplete downloads that already had holes in the originals.
+* Audiobooks: all 1,841 files in the audiobook folder were present at their exact planned sizes, and twelve of them decoded end to
+  end without errors. A container (Audiobookshelf) kept its own database of the library: 1,821 files, 1,803 of them audio and 18
+  ebooks. All 1,821 were present, and 1,566 had exactly the size the database recorded. The other 255, all audio, were larger than
+  the database's figure. Those recorded sizes are multiples of 4096 (254 of the 255) and nearly all of the files were added in the
+  weeks before the incident, which fits a library scan that ran while they were still being copied in. All 255 open cleanly, and
+  254 also decode their last 30 seconds without a message. The remaining one decodes completely too, but its embedded cover-art
+  atom holds a valid image followed by 8 MB of other bytes. Those bytes start in the middle of a sector, right after the image,
+  which points to the original file rather than to a wrongly mapped extent.
+* The published static binary (`bin/extent-restore-x86_64-linux-static`) was re-run on the 47-file canary after the main restore
+  and produced output identical to the first run: same bytes, owner, mode and modification time.
+
+**What was not, and could not be, checked:** the share had data checksums turned off, so there is nothing to compare restored data
+against cryptographically. Correctness rests on the structure of the recovered metadata (each file's extents come from its own
+records), the reuse check above, and the content checks listed here. A file that was modified shortly before the deletion could have
+come back in an older version.
