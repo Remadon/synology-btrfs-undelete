@@ -5,7 +5,7 @@
 **"Erase all of the package data files. (Not Recoverable)"** (`wizard_delete_data=true`) and the package's `etc` directory is
 missing or dangling (for example because the volume it was installed on was rebuilt or removed, so the package shows as "broken").
 
-**Upstream report:** *(the link will be added here once it is filed)*
+**Upstream report:** [SynoCommunity/spksrc#7650](https://github.com/SynoCommunity/spksrc/issues/7650)
 
 ## The code
 
