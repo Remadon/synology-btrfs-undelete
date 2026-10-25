@@ -1,7 +1,7 @@
 # The bug that caused it
 
 **Where:** `mk/spksrc.service/installer.dsm7` in [SynoCommunity/spksrc](https://github.com/SynoCommunity/spksrc), function `postuninst`.
-**Who is affected:** every package built with that installer (about 175 in `spk/`), when the user answers the uninstall dialog with
+**Who is affected:** every package that uses that installer (the repository has about 175 package folders; I have not audited which of them reach this code path), when the user answers the uninstall dialog with
 **"Erase all of the package data files. (Not Recoverable)"** (`wizard_delete_data=true`) and the package's `etc` directory is
 missing or dangling (for example because the volume it was installed on was rebuilt or removed, so the package shows as "broken").
 
@@ -91,5 +91,5 @@ erasing a whole fake tree in three scenarios (dangling etc, all package dirs mis
 
 * Do not choose "Erase all of the package data files" for a package that shows as broken, or after you rebuilt/moved/removed the
   volume it was installed on. Choose "Uninstall only" and delete leftovers by hand.
-* Check which shares your `sc-*` package accounts can write to (Control Panel > User & Group) and remove access they don't need.
+* Check which shares your `sc-*` package accounts can write to: Control Panel > Shared Folder > edit a share > Permissions, then pick **System internal user** in the dropdown (package accounts do not appear under User & Group). Remove access they don't need; Read-only cannot delete anything. SynoCommunity's [permissions guide](https://docs.synocommunity.com/user-guide/permissions/) explains how these accounts work.
 * Take snapshots (Snapshot Replication) and keep a backup elsewhere.
